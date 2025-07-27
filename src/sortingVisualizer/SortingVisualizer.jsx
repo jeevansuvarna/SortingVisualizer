@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { getBubbleSort } from '../algorithm/bubblesort';
 import { getInsertionSort } from '../algorithm/insertionSort';
 import getMergeSort from '../algorithm/mergeSort';
@@ -34,16 +34,16 @@ export const SortingVisualizer = () => {
   const [width, setWidth] = useState([]);
   const [maxRange, setMaxRange] = useState(60);
 
-  useEffect(() => {
-    const checkMobile = () => {
-      const isMobile = window.innerWidth <= 768; // Adjust as needed
-      setMaxRange(isMobile ? 30 : 200);
-    };
+  const checkMobile = useCallback(() => {
+    const isMobile = window.innerWidth <= 768;
+    setMaxRange(isMobile ? 30 : 200);
+  }, [setMaxRange]);
 
+  useEffect(() => {
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+  }, [checkMobile]);
 
   const options = [
     { value: 'bubble', label: 'Bubble Sort' },
@@ -67,15 +67,7 @@ export const SortingVisualizer = () => {
   });
   const [disable, setDisable] = useState(false);
 
-  useEffect(() => {
-    // eslint-disable-next-line no-restricted-globals
-    const screenWidth = window.screen.width / 2.5;
-    setWidth(screenWidth / userSettings.arrayLength);
-
-    resetArray();
-  }, [userSettings.arrayLength]);
-
-  const resetArray = () => {
+  const resetArray = useCallback(() => {
     let array = [];
     timeoutsRef.current.forEach(clearTimeout);
     timeoutsRef.current = [];
@@ -84,7 +76,15 @@ export const SortingVisualizer = () => {
     }
     setDisable(false);
     setArray(array);
-  };
+  }, [userSettings.arrayLength]); // Include this!
+
+  useEffect(() => {
+    const screenWidth = window.screen.width / 2.5;
+    setWidth(screenWidth / userSettings.arrayLength);
+
+    resetArray();
+  }, [userSettings.arrayLength, resetArray]);
+
   const controlAnimation = (animation) => {
     const timer = userSettings.timer;
     clearAllTimeouts(); // Clear any previously set timeouts
@@ -253,8 +253,8 @@ export const SortingVisualizer = () => {
           </div>
           <div className='middle-container'>
             <div className='complex'>
-              <h1 id='time-complexity'></h1>
-              <h1 id='space-complexity'></h1>
+              <p id='time-complexity'></p>
+              <p id='space-complexity'></p>
             </div>
           </div>
           <div className='right-container'>
