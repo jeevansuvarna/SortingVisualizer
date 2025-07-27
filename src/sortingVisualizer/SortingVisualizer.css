@@ -147,6 +147,21 @@
   margin: 0 3px;
 }
 
+.portfolio_img {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  margin: 20px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  border: 1px solid white;
+  position: fixed;
+  bottom: 0;
+}
+.portfolio_img:hover {
+  transform: scale(1.2);
+}
+
 @media (max-width: 48em) {
   .top-container {
     display: flex;
@@ -159,5 +174,8 @@
   }
   .complex h1 {
     font-size: 14px;
+  }
+  .portfolio_img:hover {
+    transform: unset;
   }
 }

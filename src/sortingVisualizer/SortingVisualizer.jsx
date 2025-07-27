@@ -5,6 +5,7 @@ import getMergeSort from '../algorithm/mergeSort';
 import { getQuickSort } from '../algorithm/quickSort';
 import './SortingVisualizer.css';
 import Select from 'react-select';
+import portfolio from '../images/portfolio.png';
 
 const PRIMARY_COLOR = 'var(--bar-color)';
 const SECONDARY_COLOR = 'var(--bar-color-secondary)';
@@ -220,88 +221,99 @@ export const SortingVisualizer = () => {
     quick: quickSort,
   };
   return (
-    <div className='sorting-container'>
-      <h1>Sorting Algorithm Visualizer</h1>
-      <div className='top-container'>
-        <div className='left-container'>
-          <label for='algorithm' class='dropdown-label'>
-            Algorithm
-          </label>
-          <Select
-            options={options}
-            styles={customStyles}
-            defaultValue={options[0]}
-            onChange={handleChange}
-            isDisabled={disable}
-          />
-          <div className='buttons'>
-            <button
-              className='start-btn'
-              onClick={() => {
-                functionObj[selectedOption.value]();
-              }}
-              disabled={disable}
-            >
-              Start
-            </button>
-            <button className='generate-btn' onClick={() => resetArray()}>
-              Reset
-            </button>
+    <>
+      <div className='sorting-container'>
+        <h1>Sorting Algorithm Visualizer</h1>
+        <div className='top-container'>
+          <div className='left-container'>
+            <label for='algorithm' class='dropdown-label'>
+              Algorithm
+            </label>
+            <Select
+              options={options}
+              styles={customStyles}
+              defaultValue={options[0]}
+              onChange={handleChange}
+              isDisabled={disable}
+            />
+            <div className='buttons'>
+              <button
+                className='start-btn'
+                onClick={() => {
+                  functionObj[selectedOption.value]();
+                }}
+                disabled={disable}
+              >
+                Start
+              </button>
+              <button className='generate-btn' onClick={() => resetArray()}>
+                Reset
+              </button>
+            </div>
+          </div>
+          <div className='middle-container'>
+            <div className='complex'>
+              <h1 id='time-complexity'></h1>
+              <h1 id='space-complexity'></h1>
+            </div>
+          </div>
+          <div className='right-container'>
+            <div class='slider-wrapper'>
+              <label for='arraySize' class='slider-label'>
+                Array Size:{' '}
+                <span id='arrayValue'>{userSettings?.arrayLength}</span>
+              </label>
+              <input
+                type='range'
+                min='1'
+                max={maxRange}
+                value={userSettings.arrayLength}
+                onChange={handleBar}
+                className='slider-input'
+                disabled={disable}
+              />
+            </div>
+            <div class='slider-wrapper'>
+              <label for='arraySize' class='slider-label'>
+                Set Timer : <span id='arrayValue'>{userSettings?.timer}</span>
+              </label>
+              <input
+                type='range'
+                min='1'
+                max='60'
+                value={userSettings.timer}
+                onChange={handleTimer}
+                className='slider-input'
+                disabled={disable}
+              />
+            </div>
           </div>
         </div>
-        <div className='middle-container'>
-          <div className='complex'>
-            <h1 id='time-complexity'></h1>
-            <h1 id='space-complexity'></h1>
-          </div>
-        </div>
-        <div className='right-container'>
-          <div class='slider-wrapper'>
-            <label for='arraySize' class='slider-label'>
-              Array Size:{' '}
-              <span id='arrayValue'>{userSettings?.arrayLength}</span>
-            </label>
-            <input
-              type='range'
-              min='1'
-              max={maxRange}
-              value={userSettings.arrayLength}
-              onChange={handleBar}
-              className='slider-input'
-              disabled={disable}
-            />
-          </div>
-          <div class='slider-wrapper'>
-            <label for='arraySize' class='slider-label'>
-              Set Timer : <span id='arrayValue'>{userSettings?.timer}</span>
-            </label>
-            <input
-              type='range'
-              min='1'
-              max='60'
-              value={userSettings.timer}
-              onChange={handleTimer}
-              className='slider-input'
-              disabled={disable}
-            />
+        <div className='botton-container'>
+          <div className='array-container'>
+            {array.map((value, idx) => (
+              <div
+                className='array-bar'
+                key={idx}
+                style={{
+                  backgroundColor: PRIMARY_COLOR,
+                  height: `${value}px`,
+                  width: `${width}px`,
+                }}
+              ></div>
+            ))}
           </div>
         </div>
       </div>
-      <div className='botton-container'>
-        <div className='array-container'>
-          {array.map((value, idx) => (
-            <div
-              className='array-bar'
-              key={idx}
-              style={{
-                backgroundColor: PRIMARY_COLOR,
-                height: `${value}px`,
-                width: `${width}px`,
-              }}
-            ></div>
-          ))}
-        </div>
+      <div>
+        <a
+          href='https://jeevan-suvarna.netlify.app/'
+          target='_blank'
+          rel='noreferrer'
+        >
+          <img src={portfolio} alt='portfolio' className='portfolio_img' />
+        </a>
       </div>
-    </div>
+    </>
   );
 };
