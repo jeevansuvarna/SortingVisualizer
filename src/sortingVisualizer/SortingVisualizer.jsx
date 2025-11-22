@@ -36,7 +36,7 @@ export const SortingVisualizer = () => {
 
   const checkMobile = useCallback(() => {
     const isMobile = window.innerWidth <= 768;
-    setMaxRange(isMobile ? 30 : 200);
+    setMaxRange(isMobile ? 30 : 90);
   }, [setMaxRange]);
 
   useEffect(() => {
@@ -62,8 +62,8 @@ export const SortingVisualizer = () => {
   const [selectedOption, setSelectedOption] = useState(options[0]);
 
   const [userSettings, setUserSettings] = useState({
-    arrayLength: window.innerWidth <= 768 ? 10 : 100,
-    timer: 10,
+    arrayLength: window.innerWidth <= 768 ? 10 : 90,
+    timer: 5,
   });
   const [disable, setDisable] = useState(false);
 
@@ -98,16 +98,22 @@ export const SortingVisualizer = () => {
         const timeoutId = setTimeout(() => {
           const barOneStyle = arrayBars[barOne].style;
           const barTwoStyle = arrayBars[barTwo].style;
-          const color = flag === 'comp1' ? SECONDARY_COLOR : PRIMARY_COLOR;
+          const isComparing = flag === 'comp1';
+          const color = isComparing ? SECONDARY_COLOR : PRIMARY_COLOR;
+          const glow = isComparing
+            ? '0 0 15px rgba(250, 204, 21, 0.8), 0 0 30px rgba(250, 204, 21, 0.4)'
+            : '0 0 5px rgba(78, 143, 250, 0.2)';
           barOneStyle.backgroundColor = color;
           barTwoStyle.backgroundColor = color;
-        }, i * timer);
+          barOneStyle.boxShadow = glow;
+          barTwoStyle.boxShadow = glow;
+        }, i * timer * 50);
         timeoutsRef.current.push(timeoutId);
       } else {
         const timeoutId = setTimeout(() => {
           const barOneStyle = arrayBars[barOne].style;
           barOneStyle.height = `${barTwo}px`;
-        }, i * timer);
+        }, i * timer * 50 );
         timeoutsRef.current.push(timeoutId);
       }
     }
@@ -224,84 +230,88 @@ export const SortingVisualizer = () => {
     <>
       <div className='sorting-container'>
         <h1>Sorting Algorithm Visualizer</h1>
-        <div className='top-container'>
-          <div className='left-container'>
-            <label for='algorithm' class='dropdown-label'>
-              Algorithm
-            </label>
-            <Select
-              options={options}
-              styles={customStyles}
-              defaultValue={options[0]}
-              onChange={handleChange}
-              isDisabled={disable}
-            />
-            <div className='buttons'>
-              <button
-                className='start-btn'
-                onClick={() => {
-                  functionObj[selectedOption.value]();
-                }}
-                disabled={disable}
-              >
-                Start
-              </button>
-              <button className='generate-btn' onClick={() => resetArray()}>
-                Reset
-              </button>
-            </div>
-          </div>
-          <div className='middle-container'>
-            <div className='complex'>
-              <p id='time-complexity'></p>
-              <p id='space-complexity'></p>
-            </div>
-          </div>
-          <div className='right-container'>
-            <div class='slider-wrapper'>
-              <label for='arraySize' class='slider-label'>
-                Array Size:{' '}
-                <span id='arrayValue'>{userSettings?.arrayLength}</span>
+        <div className='main-layout'>
+          <div className='top-container'>
+            <div className='left-container'>
+              <label for='algorithm' class='dropdown-label'>
+                Algorithm
               </label>
-              <input
-                type='range'
-                min='1'
-                max={maxRange}
-                value={userSettings.arrayLength}
-                onChange={handleBar}
-                className='slider-input'
-                disabled={disable}
+              <Select
+                options={options}
+                styles={customStyles}
+                defaultValue={options[0]}
+                onChange={handleChange}
+                isDisabled={disable}
               />
+              <div className='buttons'>
+                <button
+                  className='start-btn'
+                  onClick={() => {
+                    functionObj[selectedOption.value]();
+                  }}
+                  disabled={disable}
+                >
+                  Start
+                </button>
+                <button className='generate-btn' onClick={() => resetArray()}>
+                  Reset
+                </button>
+              </div>
             </div>
-            <div class='slider-wrapper'>
-              <label for='arraySize' class='slider-label'>
-                Set Timer : <span id='arrayValue'>{userSettings?.timer}</span>
-              </label>
-              <input
-                type='range'
-                min='1'
-                max='60'
-                value={userSettings.timer}
-                onChange={handleTimer}
-                className='slider-input'
-                disabled={disable}
-              />
+            <div className='middle-container'>
+              <div className='complex'>
+                <p id='time-complexity'></p>
+                <p id='space-complexity'></p>
+              </div>
+            </div>
+            <div className='right-container'>
+              <div class='slider-wrapper'>
+                <label for='arraySize' class='slider-label'>
+                  Array Size:{' '}
+                  <span id='arrayValue'>{userSettings?.arrayLength}</span>
+                </label>
+                <input
+                  type='range'
+                  min='1'
+                  max={maxRange}
+                  value={userSettings.arrayLength}
+                  onChange={handleBar}
+                  className='slider-input'
+                  disabled={disable}
+                />
+              </div>
+              <div class='slider-wrapper'>
+                <label for='arraySize' class='slider-label'>
+                  Set Timer : <span id='arrayValue'>{userSettings?.timer}</span>
+                </label>
+                <input
+                  type='range'
+                  min='1'
+                  max='100'
+                  value={userSettings.timer}
+                  onChange={handleTimer}
+                  className='slider-input'
+                  disabled={disable}
+                />
+              </div>
             </div>
           </div>
-        </div>
-        <div className='botton-container'>
-          <div className='array-container'>
-            {array.map((value, idx) => (
-              <div
-                className='array-bar'
-                key={idx}
-                style={{
-                  backgroundColor: PRIMARY_COLOR,
-                  height: `${value}px`,
-                  width: `${width}px`,
-                }}
-              ></div>
-            ))}
+          <div className='botton-container'>
+            <div className='array-container'>
+              {array.map((value, idx) => (
+                <div
+                  className='array-bar'
+                  key={idx}
+                  style={{
+                    backgroundColor: PRIMARY_COLOR,
+                    height: `${value}px`,
+                    width: `${width}px`,
+                    animation: `barGrow 0.4s ease-out ${idx * 0.01}s both`,
+                    transformOrigin: 'bottom',
+                  }}
+                ></div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

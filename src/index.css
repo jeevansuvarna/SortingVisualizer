@@ -1,8 +1,41 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family: 'Nunito', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Animated background pattern */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(circle at 20% 80%, rgba(78, 143, 250, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(34, 211, 238, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(250, 204, 21, 0.05) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: -1;
+  animation: backgroundPulse 10s ease-in-out infinite alternate;
+}
+
+@keyframes backgroundPulse {
+  0% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 code {
@@ -10,22 +43,50 @@ code {
 }
 
 :root {
-  /* Light Theme Variables */
-  --background-color: #ffffff;
-  --text-color: #000000;
-  --primary-color: #1e293b;
+  /* Theme Variables */
+  --background-color: #0f172a;
+  --text-color: #f8fafc;
+  --primary-color: #4e8ffa;
   --secondary-color: #22c55e;
   --accent-color: #f8f9fa;
-  --border-color: #0057a3;
+  --border-color: rgba(78, 143, 250, 0.3);
   --bar-color: #4e8ffa;
   --bar-color-secondary: #facc15;
+
+  /* Additional utility colors */
+  --surface-color: rgba(30, 41, 59, 0.8);
+  --surface-hover: rgba(30, 41, 59, 0.95);
+  --glow-primary: rgba(78, 143, 250, 0.4);
+  --glow-secondary: rgba(250, 204, 21, 0.4);
 }
 
 body.dark {
   /* Dark Theme Variables */
-  --background-color: #121212;
+  --background-color: #0a0a0f;
   --text-color: #ffffff;
-  --primary-color: #0d6efd;
-  --secondary-color: #adb5bd;
-  --accent-color: #1f1f1f;
+  --primary-color: #4e8ffa;
+  --secondary-color: #22c55e;
+  --accent-color: #f8f9fa;
+}
+
+/* Selection styling */
+::selection {
+  background: rgba(78, 143, 250, 0.3);
+  color: #fff;
+}
+
+::-moz-selection {
+  background: rgba(78, 143, 250, 0.3);
+  color: #fff;
+}
+
+/* Focus outline styling */
+:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
 }
